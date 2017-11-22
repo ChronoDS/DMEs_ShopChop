@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.danie.dmes_shopchop.ReadMeActivity">
+
+
+
+    <TextView
+        android:id="@+id/ReadMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/txt_ReadMe" />
+
+    <ImageView
+        android:id="@+id/Logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ReadMe"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:contentDescription="Logo Placement"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <ImageButton
+        android:id="@+id/btn_Start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ReadMe"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="58dp"
+        android:onClick="btn_Start"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+
+
+
+</RelativeLayout>
