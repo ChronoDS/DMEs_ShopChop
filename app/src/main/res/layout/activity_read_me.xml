@@ -20,23 +20,11 @@
         android:id="@+id/Logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ReadMe"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:contentDescription="Logo Placement"
-        app:srcCompat="@mipmap/ic_launcher" />
-
-    <ImageButton
-        android:id="@+id/btn_Start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_above="@+id/ReadMe"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="58dp"
-        android:onClick="btn_Start"
-        app:srcCompat="@mipmap/ic_launcher_round" />
-
-
+        android:layout_marginBottom="69dp"
+        android:contentDescription="Logo Placement"
+        app:srcCompat="@drawable/st_edwards_crown" />
 
 
 </RelativeLayout>
