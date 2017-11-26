@@ -95,4 +95,12 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
 
+    <string name="pref_header_about">About</string>
+    <string name="pref_title_about_the_app">About the application</string>
+    <string name="text_about_the_app">This app makes your shopping be so easy.\n
+You can add to cart any item by scanning its barcode, or by its name.\n
+Once it was added you can purchase it by creditcard / PayPal.\n
+You can choose that the product will reach your home by many types of delivery options, or you can just pickup the item from our store.</string>
+
+
 </resources>
