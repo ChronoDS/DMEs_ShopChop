@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.danie.dmes_shopchop.SignupActivity"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_SignupHeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/tvSignup_Headline"
+            android:textSize="52sp" />
+
+        <TextView
+            android:id="@+id/tv_SignupSubHeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_SignupHeadline"
+            android:layout_centerHorizontal="true"
+            android:text="@string/tvSignup_SubHeadline"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/img_btn_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_SignupSubHeadline"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:contentDescription="@string/imgDsc_picker"
+            app:srcCompat="@mipmap/ic_launcher_round" />
+
+        <EditText
+            android:id="@id/etxt_usr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/img_btn_picker"
+            android:layout_marginTop="40dp"
+            android:ems="10"
+            android:hint="@string/etUser"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/etxt_Pwrd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etxt_usr"
+            android:ems="10"
+            android:hint="@string/etPassword"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/etxt_CPwrd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etxt_Pwrd"
+            android:ems="10"
+            android:hint="@string/etCpassword"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/etxt_FullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etxt_CPwrd"
+            android:ems="10"
+            android:hint="@string/etFull_name"
+            android:inputType="textPersonName" />
+
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Address:"
+            android:layout_below="@id/etxt_FullName"/>
+
+        <EditText
+            android:id="@+id/etxt_AddressStreet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:hint="Street and house number"
+            android:layout_below="@id/tv_address"/>
+
+        <EditText
+            android:id="@+id/etxt_AddressCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:hint="City"
+            android:layout_below="@id/etxt_AddressStreet"/>
+
+        <EditText
+            android:id="@+id/etxt_AddressCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:hint="Country"
+            android:layout_below="@id/etxt_AddressCity"/>
+
+        <EditText
+            android:id="@+id/etxt_AddressZip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="Zip Code"
+            android:layout_below="@id/etxt_AddressCountry"/>
+
+        <EditText
+            android:id="@+id/etxt_Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etxt_AddressZip"
+            android:ems="10"
+            android:hint="@string/etEmail"
+            android:inputType="textEmailAddress" />
+
+        <Button
+            android:id="@+id/btn_Signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etxt_Email"
+            android:onClick="notImplementedYet"
+            android:text="Sign Up" />
+
+    </RelativeLayout>
+
+</ScrollView>
