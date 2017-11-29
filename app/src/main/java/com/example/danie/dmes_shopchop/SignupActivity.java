@@ -19,14 +19,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.net.URI;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.CAMERA;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -35,11 +35,18 @@ public class SignupActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
+            /**
+     * Id to identity CAMERA permission request.
+            */
+    private static final int REQUEST_CAMERA = 0;
+    private EditText etxt_usr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        etxt_usr = (EditText) findViewById(R.id.etxt_usr);
 
         final String [] imageOptions = new String [] {"From Camera", "From SD Card"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item,imageOptions);
@@ -123,56 +130,61 @@ public class SignupActivity extends AppCompatActivity {
         return res;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     protected void notImplementedYet(View view){
         Context context = getApplicationContext();
         Toast toast = Toast.makeText(context,"Not Implemented Yet!",Toast.LENGTH_SHORT);
         toast.show();
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//        /**
-//     * Id to identity READ_CONTACTS permission request.
-//            */
-//    private static final int REQUEST_READ_CONTACTS = 0;
-//
-//
-//    //////////////
-//
-//
-//
-//private boolean mayRequestContacts() {
-//    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//        return true;
-//    }
-//    if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-//        return true;
-//    }
-//    if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-//        Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-//                .setAction(android.R.string.ok, new View.OnClickListener() {
-//                    @Override
-//                    @TargetApi(Build.VERSION_CODES.M)
-//                    public void onClick(View v) {
-//                        requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-//                    }
-//                });
-//    } else {
-//        requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-//    }
-//    return false;
-//}
-//
-//    /**
-//     * Callback received when a permissions request has been completed.
-//     */
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_READ_CONTACTS) {
-//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                populateAutoComplete();
-//            }
-//        }
-//    }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected void sendRegistrationForm(View view){
+
+    }
+
+
+    private void populateAutoComplete() {
+        if (!mayRequestCamera()) {
+            return;
+        }
+    }
+
+
+    private boolean mayRequestCamera() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if(checkSelfPermission(CAMERA) == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }
+        if(shouldShowRequestPermissionRationale(CAMERA)){
+            Snackbar.make(etxt_usr, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{CAMERA}, REQUEST_CAMERA);
+        }
+        return false;
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
+        }
+    }
 }
+
+//class RegistrationPacket(String usr, ){
+//
+//        }
