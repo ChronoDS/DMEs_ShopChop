@@ -42,8 +42,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/button2"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="109dp"
+        android:layout_centerVertical="true"
         android:onClick="onClickLogin"
         android:text="Login" />
 
@@ -74,5 +73,14 @@
         android:layout_marginTop="48dp"
         android:onClick="onClickMaps"
         android:text="Maps" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button7"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickProfile"
+        android:text="Profile" />
 
 </RelativeLayout>
