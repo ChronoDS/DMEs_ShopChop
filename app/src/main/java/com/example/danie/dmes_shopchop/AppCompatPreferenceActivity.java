@@ -106,4 +106,8 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         }
         return mDelegate;
     }
+
+    // TODO import to this class, from the SignupActivity, thats for multiple use in Signup and Profile.
+    public static class ImageAccess {
+    }
 }

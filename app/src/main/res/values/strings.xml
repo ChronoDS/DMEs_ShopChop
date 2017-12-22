@@ -32,6 +32,14 @@
     <string name="tvSignup_SubHeadline">And Start Shopping</string>
     <string name="tvBirthday">Birthday:</string>
     <string name="etUser">User</string>
+    <string name="etAddress">Address:</string>
+    <string name="etStreet_and_house_number">Street and house number</string>
+    <string name="etCity">City</string>
+    <string name="etCountry">Country</string>
+    <string name="etZip_code">Zip Code</string>
+    <string name="etSign_up">Sign Up</string>
+    <!-- Example Album for App -->
+    <string name="album_name">DMESSalbum</string>
 
     <!-- Strings related to Settings -->
 
@@ -92,10 +100,6 @@
     <string name="pref_title_order_status">Orders Updates</string>
 
     <!--==========================================================-->
-
-
-
-
 
     <string name="pref_header_about">About</string>
     <string name="pref_title_about_the_app">About the application</string>

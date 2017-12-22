@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    // TODO pull relevant user data and display it in the Profile Activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

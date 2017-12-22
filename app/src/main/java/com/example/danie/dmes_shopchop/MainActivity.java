@@ -4,13 +4,33 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+// TODO make a "if allready logged in" function that runs on the onCreate function - leads to loginActivity if not signed in. else, lets say, MapsActivity for now.
+// TODO for final review, make a splash screen instead of the current BetaPage exsists in MainActivity.
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+//        // Write a message to the database
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("Users");
+        DatabaseReference myRef;
+        myRef = FirebaseDatabase.getInstance().getReference();
+
+        String userId = myRef.push().getKey();
+        myRef.child("users").child(userId).child("name").setValue("Pitter Parker");
+        myRef.child("users").child(userId).child("phone").setValue("1-870-325");
+        myRef.child("users").child(userId).child("email").setValue("savemyass@spiderman.hero");
     }
 
     protected void onClickSignUpActivity(View view){

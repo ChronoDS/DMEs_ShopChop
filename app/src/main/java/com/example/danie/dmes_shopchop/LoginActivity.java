@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +46,16 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+
+    // TODO adding a Email/Password Authentication.
+    // TODO adding Gmail/Facebook Authentication.
+    // TODO build three DB sections/tables..such as Users, etc..
+    /**
+     * Firebase Authentication Instance.
+     */
+    private FirebaseAuth mAuth;
+
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -63,10 +80,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        /**
+         * initialize Firebase Authentication Instance.
+         */
+        mAuth = FirebaseAuth.getInstance();
+
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -93,6 +118,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+
+        /**
+         * Registers a User By Email and Password.
+         *
+         */
+
+
+//        mAuth.createUserWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(TAG, "createUserWithEmail:success");
+//                            Toast.makeText(LoginActivity.this, "Authentication Succeed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+//                        }
+//
+//                        // ...
+//                    }
+//                });
+
     }
 
     private void populateAutoComplete() {
@@ -351,5 +407,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void notImplementedYet(View view){
         Toast.makeText(getApplicationContext(),"Not Implemented Yet!",Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * This function ment for checking if user is allready logged in.
+     * shows the relevant information if so. else sign-in page
+     * TODO this two options listed above.
+     */
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+//    }
+
+
+
 }
 
