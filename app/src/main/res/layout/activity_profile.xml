@@ -21,12 +21,13 @@ android:paddingBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical" >
 
         <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/btnProfilePic"
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:layout_gravity="center"
             android:layout_marginTop="40dp"
-            android:scaleType="centerCrop"
             android:onClick="onTouch"
+            android:scaleType="centerCrop"
             android:src="@drawable/photo"
             app:sriv_border_color="#FFCC00"
             app:sriv_border_width="2dp"

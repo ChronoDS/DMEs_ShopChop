@@ -73,13 +73,7 @@ public class SignupActivity extends AppCompatActivity {
         final AlertDialog dialog = builder.create();
 
 
-
-
-
-
-        ///////////////////////
         ImgBtn = (ImageButton) findViewById(R.id.img_btn_picker);
-
         ImgBtn.setOnClickListener(
                 new ImageButton.OnClickListener(){
                     public void onClick(View v){
@@ -104,10 +98,8 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         Bitmap bitmap = null;
         String path = "";
-
 
         if(resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
