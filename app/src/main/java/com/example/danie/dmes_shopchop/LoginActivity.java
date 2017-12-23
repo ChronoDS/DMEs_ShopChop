@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         /**
          * initialize Firebase Authentication Instance.
          */
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAccess.getAuthInstance();
 
 
         // Set up the login form.

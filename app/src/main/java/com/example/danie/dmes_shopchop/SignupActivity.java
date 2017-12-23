@@ -39,7 +39,7 @@ public class SignupActivity extends AppCompatActivity {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
 
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference ref = FirebaseAccess.getDatabaseReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

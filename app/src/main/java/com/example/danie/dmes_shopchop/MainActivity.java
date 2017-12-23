@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 //        FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference myRef = database.getReference("Users");
         DatabaseReference myRef;
-        myRef = FirebaseDatabase.getInstance().getReference();
+        myRef = FirebaseAccess.getDatabaseReference();
 
         String userId = myRef.push().getKey();
         myRef.child("users").child(userId).child("name").setValue("Pitter Parker");
