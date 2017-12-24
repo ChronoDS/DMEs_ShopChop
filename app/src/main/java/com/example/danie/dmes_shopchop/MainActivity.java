@@ -27,10 +27,11 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef;
         myRef = FirebaseAccess.getDatabaseReference();
 
-        String userId = myRef.push().getKey();
-        myRef.child("users").child(userId).child("name").setValue("Pitter Parker");
-        myRef.child("users").child(userId).child("phone").setValue("1-870-325");
-        myRef.child("users").child(userId).child("email").setValue("savemyass@spiderman.hero");
+//        String userId = myRef.push().getKey();
+//        String userId = "9GlOoGvaEyaprEWG2UKihOJXXkn2";
+//        myRef.child("users").child(userId).child("name").setValue("Elad Test User");
+//        myRef.child("users").child(userId).child("phone").setValue("050-665-5566");
+//        myRef.child("users").child(userId).child("email").setValue("ep@devtest.com");
     }
 
     protected void onClickSignUpActivity(View view){
