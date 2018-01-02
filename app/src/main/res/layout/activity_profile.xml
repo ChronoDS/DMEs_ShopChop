@@ -11,48 +11,55 @@ android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.danie.dmes_shopchop.ProfileActivity">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/ProfileScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <com.joooonho.SelectableRoundedImageView
-            android:id="@+id/btnProfilePic"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="40dp"
-            android:onClick="onTouch"
-            android:scaleType="centerCrop"
-            android:src="@drawable/photo"
-            app:sriv_border_color="#FFCC00"
-            app:sriv_border_width="2dp"
-            app:sriv_oval="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20dp"
-            android:layout_marginTop="100dp"
-            android:textAlignment="center"
-            android:hint="Israel Israeli"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:text="+972 54-483-0849"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:text="israel.il@example.com"/>
+            <com.joooonho.SelectableRoundedImageView
+                android:id="@+id/btnProfilePic"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:onClick="onTouch"
+                android:scaleType="centerCrop"
+                android:src="@drawable/photo"
+                app:sriv_border_color="#FFCC00"
+                app:sriv_border_width="2dp"
+                app:sriv_oval="true" />
+
+            <TextView
+                android:id="@+id/pName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="100dp"
+                android:hint="Israel Israeli"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/pPhone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="+972 54-483-0849"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/pEmail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="israel.il@example.com"
+                android:textAlignment="center"
+                android:textSize="20dp" />
             />
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,8 +18,16 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,18 +42,21 @@ public class SignupActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static ImageButton ImgBtn;
-
     private Uri mImageCaptureUri;
-
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
 
     DatabaseReference ref = FirebaseAccess.getDatabaseReference();
+    private FirebaseAuth mAuth;
+
+    private static final String TAG = "EmailPasswrodAuth";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        mAuth = FirebaseAccess.getAuthInstance();
 
         //    Additions for photo menu and choosing from file:
         final String [] items           = new String [] {"From Camera", "From SD Card"};
@@ -72,7 +84,6 @@ public class SignupActivity extends AppCompatActivity {
 
         final AlertDialog dialog = builder.create();
 
-
         ImgBtn = (ImageButton) findViewById(R.id.img_btn_picker);
         ImgBtn.setOnClickListener(
                 new ImageButton.OnClickListener(){
@@ -82,6 +93,101 @@ public class SignupActivity extends AppCompatActivity {
                 }
         );
     }
+
+    ////////////////////////REGISTRATION WITH FIREBASE MAIL AND PASS FIELDS AND METHODS/////////////////////////
+    // TODO michael import this instance to FireAccess.
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+        // THIS IS IF THE USER IS SIGNED IN - OPEN MAP ACTIVITY.
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        registerReceiver(mTokenReceiver, TokenBroadcastReceiver.getFilter());
+//    }
+
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unregisterReceiver(mTokenReceiver);
+//    }
+
+//    private void startSignIn() {
+//        // Initiate sign in with custom token
+//        // [START sign_in_custom]
+//        mAuth.signInWithCustomToken(mCustomToken)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(TAG, "signInWithCustomToken:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w(TAG, "signInWithCustomToken:failure", task.getException());
+//                            Toast.makeText(CustomAuthActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+//                        }
+//                    }
+//                });
+//        // [END sign_in_custom]
+//    }
+
+
+//    private void createAccount(String email, String password) {
+//        Log.d(TAG, "createAccount:" + email);
+//        if (!validateForm()) {
+//            return;
+//        }
+//    }
+
+//    private void updateUI(FirebaseUser user) {
+//        if (user != null) {
+//            ((TextView) findViewById(R.id.text_sign_in_status)).setText(
+//                    "User ID: " + user.getUid());
+//        } else {
+//            ((TextView) findViewById(R.id.text_sign_in_status)).setText(
+//                    "Error: sign in failed.");
+//        }
+//    }
+
+//    private void setCustomToken(String token) {
+//        mCustomToken = token;
+//
+//        String status;
+//        if (mCustomToken != null) {
+//            status = "Token:" + mCustomToken;
+//        } else {
+//            status = "Token: null";
+//        }
+//
+//        // Enable/disable sign-in button and show the token
+//        findViewById(R.id.button_sign_in).setEnabled((mCustomToken != null));
+//        ((TextView) findViewById(R.id.text_token_status)).setText(status);
+//    }
+
+//    @Override
+//    public void onClick(View v) {
+//        int i = v.getId();
+//        if (i == R.id.button_sign_in) {
+//            startSignIn();
+//
+//        }
+//    }
+
+
+    /////////////////////////////////END OF REGISTRATION WITH MAIL&PASS//////////////////////////////////////
+
+
 
     public void notImplementedYet(View view) {
         Toast.makeText(getApplicationContext(), "not implemented yet", Toast.LENGTH_SHORT).show();
@@ -156,15 +262,15 @@ public class SignupActivity extends AppCompatActivity {
         return "";
     }
 
-    // CHECKING if the user exists in DB and registers users.
-    private void userRegistration (){
-
-    }
-
-    private boolean isUsrExists(String user){
-
-
-        return true;
-    }
-
+//    // CHECKING if the user exists in DB and registers users.
+//    private void userRegistration (){
+//
+//    }
+//
+//    private boolean isUsrExists(String user){
+//
+//
+//        return true;
+//    }
+//
 }

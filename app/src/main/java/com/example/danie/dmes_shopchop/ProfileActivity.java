@@ -14,8 +14,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -23,6 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.zip.Inflater;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -34,15 +41,33 @@ public class ProfileActivity extends AppCompatActivity {
     private static final int PICK_FROM_FILE = 2;
     //
 
-    /// ImageAccess Instance:
-//    ImageAccess IA = new ImageAccess();
-    ///
+    // User Profile Details:
+    private FirebaseUser user;
+    DatabaseReference dbRef;
+    //
+
+    // VISUAL PROFILE ELEMENTS
+
+    private TextView fullname;
+    private TextView phonenum;
+    private TextView emailadd;
+    private String userId;
+
+    //
 
     // TODO pull relevant user data and display it in the Profile Activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        fullname = (TextView) findViewById(R.id.pName);
+        phonenum = (TextView)findViewById(R.id.pPhone);
+        emailadd = (TextView)findViewById(R.id.pEmail);
+        dbRef = FirebaseAccess.getDatabaseReference();
+        userId = dbRef.push().getKey();
+        GetUserData();
+
 
 
         //** Additions for photo menu and choosing from file:
@@ -81,6 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
         //**
     }
 
+    //******************* IMAGE MANAGEMENT **********************//
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -149,8 +175,67 @@ public class ProfileActivity extends AppCompatActivity {
         return "";
     }
 
+    //**********************************************************//
+    //******************* USER MANAGEMENT **********************//
+    protected void GetUserData() {
+        user = FirebaseAccess.getAuthInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+//            Uri photoUrl = user.getPhotoUrl();
+
+            // Initialize Fields for profile:
+
+            dbRef.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        if (dataSnapshot.getValue() != null) {
+                            try {
+                                fullname.setText(dataSnapshot.child("name").getValue().toString());
+                                phonenum.setText(dataSnapshot.child("phone").getValue().toString());
+                                emailadd.setText(dataSnapshot.child("email").getValue().toString());
+                                Log.e("TAG", "" + dataSnapshot.getValue()); // your name values you will get here
+                            }
+                            catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                        else{
+                            Log.e("TAG", " it's null.");
+                        }
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // ...
+                }
+            });
+            ////////////////////////////////////
+
+//            fullname.setText(name);
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            String uid = user.getUid();
+        }
+        else{
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
 
 
+    //**********************************************************//
 
 
     public void onTouch(View view) {
