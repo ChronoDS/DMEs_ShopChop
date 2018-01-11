@@ -128,21 +128,21 @@ public class SignupActivity extends AppCompatActivity {
         etPhone.setError(null);
 
         if(!name.isEmpty()){
-            if(isEmailValid(email)){
-                if(isPasswordValid(password) && isPasswordValid(confirmPassword) && password.equals(confirmPassword)){
-                    /** do register */
-                    FirebaseAccess.getAuthInstance().createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                                    if (!task.isSuccessful()) {
-                                        Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        FirebaseAccess.getAuthInstance().signInWithEmailAndPassword(email, password);
-                                        User user = new User(name,  phone,  email);
-                                        FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).setValue(user);
+             if(isEmailValid(email)){
+                 if(isPasswordValid(password) && isPasswordValid(confirmPassword) && password.equals(confirmPassword)){
+                     /** do register */
+                     FirebaseAccess.getAuthInstance().createUserWithEmailAndPassword(email, password)
+                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                         @Override
+                         public void onComplete(@NonNull Task<AuthResult> task) {
+                             Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                             if (!task.isSuccessful()) {
+                                 Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
+                                         Toast.LENGTH_SHORT).show();
+                             } else {
+                                 FirebaseAccess.getAuthInstance().signInWithEmailAndPassword(email, password);
+                                 User user = new User(name,  phone,  email);
+                                 FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).setValue(user);
 //                                 FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).getRef()
 //                                         .addValueEventListener(new ValueEventListener() {
 //                                     @Override
@@ -171,16 +171,16 @@ public class SignupActivity extends AppCompatActivity {
 //                                     @Override
 //                                     public void onCancelled(DatabaseError databaseError) {}
 //                                 });
-                                    }
-                                }
-                            });
+                             }
+                         }
+                     });
 
-                }else{     // password is not valid
-                    etCPWD.setError("Password is not valid!");
-                }
-            }else{         // if mail is not vaild
-                etMail.setError("Email is not valid!");
-            }
+                 }else{     // password is not valid
+                     etCPWD.setError("Password is not valid!");
+                 }
+             }else{         // if mail is not vaild
+                 etMail.setError("Email is not valid!");
+             }
         }else{          // if name not valid
             etName.setError("Name is not valid!");
         }

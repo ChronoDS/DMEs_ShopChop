@@ -8,7 +8,7 @@ public class User {
 
     private String phone;
     private String name;
-    private boolean isAdmin;
+    private boolean admin;
     private String email;
 
     public User() {}
@@ -17,7 +17,7 @@ public class User {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.isAdmin = false;
+        this.admin = false;
     }
 
 
@@ -48,11 +48,11 @@ public class User {
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
-    public void setisAdmin() {
-        this.isAdmin = true;
+    public void setAdmin() {
+        this.admin = true;
     }
 
 }
