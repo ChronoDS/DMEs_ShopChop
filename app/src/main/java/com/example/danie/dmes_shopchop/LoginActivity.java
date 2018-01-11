@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Firebase Authentication Instance.
      */
     private FirebaseAuth mAuth;
+//    private FirebaseAnalytics mFirebaseAnalytics;
 
     final static String TAG = "Auth EmailPass";
 
@@ -96,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // initialize Firebase Authentication Instance.
         mAuth = FirebaseAccess.getAuthInstance();
-
+//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
