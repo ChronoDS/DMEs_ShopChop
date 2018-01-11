@@ -50,6 +50,8 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.Inflater;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -245,37 +247,59 @@ public class ProfileActivity extends AppCompatActivity {
     //**********************************************************//
     //******************* USER MANAGEMENT **********************//
     protected void GetUserData() {
-        user = FirebaseAccess.getAuthInstance().getCurrentUser();
+        user = FirebaseAccess.getUserInstance();
         if (user != null) {
             // Name, email address, and profile photo Url
+
             String name = user.getDisplayName();
             String email = user.getEmail();
 //            Uri photoUrl = user.getPhotoUrl();
 
             // Initialize Fields for profile:
 
-            dbRef.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            dbRef.child("users").child(user.getUid()).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    try {
-                        if (dataSnapshot.getValue() != null) {
-                            try {
-                                fullname.setText(dataSnapshot.child("name").getValue().toString());
-                                phonenum.setText(dataSnapshot.child("phone").getValue().toString());
-                                emailadd.setText(dataSnapshot.child("email").getValue().toString());
-                                Log.e("TAG", "" + dataSnapshot.getValue()); // your name values you will get here
-                            }
-                            catch (Exception e){
-                                e.printStackTrace();
-                            }
+                    Map<String, Object> hashMap = (Map<String, Object>) dataSnapshot.getValue();
+                    Set<String> keys = hashMap.keySet();
+                    for(String key : keys){
+                        switch(key) {
+                            case "name":
+                                fullname.setText(hashMap.get(key).toString());
+                                break;
+                            case "phone":
+                                phonenum.setText(hashMap.get(key).toString());
+                                break;
+                            case "email" :
+                                emailadd.setText(hashMap.get(key).toString());
+                                break;
+                            default:
+                                break;
                         }
-                        else{
-                            Log.e("TAG", " it's null.");
-                        }
+
                     }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
+
+//                    fullname.setText(dataSnapshot.child("name").getRef().);
+//                    try {
+////                        if (dataSnapshot.getValue() != null) {
+//                            fullname.setText("aftergetValuecheck");
+//                            try {
+//                                fullname.setText(dataSnapshot.child("name").getRef().getValue().toString());
+//                                phonenum.setText(dataSnapshot.child("phone").getValue().toString());
+//                                emailadd.setText(dataSnapshot.child("email").getValue().toString());
+//                                Log.e("TAG", "" + dataSnapshot.getValue()); // your name values you will get here
+//                            }
+//                            catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+////                        }
+////                        else{
+////                            Log.e("TAG", " it's null.");
+////                        }
+//                    }
+//                    catch (Exception e){
+//                        e.printStackTrace();
+//                    }
                 }
 
                 @Override

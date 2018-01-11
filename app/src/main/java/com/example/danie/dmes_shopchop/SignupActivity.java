@@ -1,10 +1,10 @@
 
 package com.example.danie.dmes_shopchop;
 
+import android.accounts.Account;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -17,28 +17,39 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 public class SignupActivity extends AppCompatActivity {
+
+    private TextView etName;        // full name
+    private TextView etMail;        // mail
+    private TextView etPWD;         // password
+    private TextView etCPWD;        // confirm password
+    private TextView etPhone;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static ImageButton ImgBtn;
@@ -55,6 +66,13 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        /** initializing */
+        etName = findViewById(R.id.etxt_FullName);
+        etMail = findViewById(R.id.etxt_Email);
+        etPWD = findViewById(R.id.etxt_Pwrd);
+        etCPWD = findViewById(R.id.etxt_CPwrd);
+        etPhone = findViewById(R.id.etxt_Phone);
 
         mAuth = FirebaseAccess.getAuthInstance();
 
@@ -94,103 +112,78 @@ public class SignupActivity extends AppCompatActivity {
         );
     }
 
-    ////////////////////////REGISTRATION WITH FIREBASE MAIL AND PASS FIELDS AND METHODS/////////////////////////
-    // TODO michael import this instance to FireAccess.
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
-        // THIS IS IF THE USER IS SIGNED IN - OPEN MAP ACTIVITY.
-    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        registerReceiver(mTokenReceiver, TokenBroadcastReceiver.getFilter());
-//    }
 
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unregisterReceiver(mTokenReceiver);
-//    }
 
-//    private void startSignIn() {
-//        // Initiate sign in with custom token
-//        // [START sign_in_custom]
-//        mAuth.signInWithCustomToken(mCustomToken)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithCustomToken:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "signInWithCustomToken:failure", task.getException());
-//                            Toast.makeText(CustomAuthActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//                    }
-//                });
-//        // [END sign_in_custom]
-//    }
+    public void onClickSignUp(View view) {
+        final String name = etName.getText().toString().trim();
+        final String email = etMail.getText().toString().trim();
+        final String password = etPWD.getText().toString().trim();
+        final String confirmPassword = etCPWD.getText().toString().trim();
+        final String phone = etPhone.getText().toString().trim();
+        etName.setError(null);
+        etMail.setError(null);
+        etPWD.setError(null);
+        etCPWD.setError(null);
+        etPhone.setError(null);
 
-
-//    private void createAccount(String email, String password) {
-//        Log.d(TAG, "createAccount:" + email);
-//        if (!validateForm()) {
-//            return;
-//        }
-//    }
-
-//    private void updateUI(FirebaseUser user) {
-//        if (user != null) {
-//            ((TextView) findViewById(R.id.text_sign_in_status)).setText(
-//                    "User ID: " + user.getUid());
-//        } else {
-//            ((TextView) findViewById(R.id.text_sign_in_status)).setText(
-//                    "Error: sign in failed.");
-//        }
-//    }
-
-//    private void setCustomToken(String token) {
-//        mCustomToken = token;
+        if(!name.isEmpty()){
+            if(isEmailValid(email)){
+                if(isPasswordValid(password) && isPasswordValid(confirmPassword) && password.equals(confirmPassword)){
+                    /** do register */
+                    FirebaseAccess.getAuthInstance().createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                    if (!task.isSuccessful()) {
+                                        Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        FirebaseAccess.getAuthInstance().signInWithEmailAndPassword(email, password);
+                                        User user = new User(name,  phone,  email);
+                                        FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).setValue(user);
+//                                 FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).getRef()
+//                                         .addValueEventListener(new ValueEventListener() {
+//                                     @Override
+//                                     public void onDataChange(DataSnapshot dataSnapshot) {
+//                                         HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
+//                                         for (String key: hashMap.keySet()) {
+//                                             switch(key){
+//                                                 case "name":
+//                                                     dataSnapshot.child(key).getRef().setValue(name);
+//                                                     break;
+//                                                 case "phone":
+//                                                     dataSnapshot.child(key).getRef().setValue(phone);
+//                                                     break;
+//                                                 case "isAdmin":
+//                                                     dataSnapshot.child(key).getRef().setValue(false);
+//                                                     break;
+//                                                 case "email":
+//                                                     dataSnapshot.child(key).getRef().setValue(email);
+//                                                     break;
+//                                                 default:
+//                                                     break;
+//                                             }
+//                                         }
+//                                     }
 //
-//        String status;
-//        if (mCustomToken != null) {
-//            status = "Token:" + mCustomToken;
-//        } else {
-//            status = "Token: null";
-//        }
-//
-//        // Enable/disable sign-in button and show the token
-//        findViewById(R.id.button_sign_in).setEnabled((mCustomToken != null));
-//        ((TextView) findViewById(R.id.text_token_status)).setText(status);
-//    }
+//                                     @Override
+//                                     public void onCancelled(DatabaseError databaseError) {}
+//                                 });
+                                    }
+                                }
+                            });
 
-//    @Override
-//    public void onClick(View v) {
-//        int i = v.getId();
-//        if (i == R.id.button_sign_in) {
-//            startSignIn();
-//
-//        }
-//    }
-
-
-    /////////////////////////////////END OF REGISTRATION WITH MAIL&PASS//////////////////////////////////////
-
-
-
-    public void notImplementedYet(View view) {
-        Toast.makeText(getApplicationContext(), "not implemented yet", Toast.LENGTH_SHORT).show();
+                }else{     // password is not valid
+                    etCPWD.setError("Password is not valid!");
+                }
+            }else{         // if mail is not vaild
+                etMail.setError("Email is not valid!");
+            }
+        }else{          // if name not valid
+            etName.setError("Name is not valid!");
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -204,6 +197,8 @@ public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+
         Bitmap bitmap = null;
         String path = "";
 
@@ -214,24 +209,24 @@ public class SignupActivity extends AppCompatActivity {
                 ImgBtn.setImageBitmap(imageBitmap);
 
             } else if (requestCode == PICK_FROM_FILE){//choice was made for pick from file.
-                    if (data != null) {
-                        Uri contentURI = data.getData();//the content itself
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                            path = saveImage(bitmap);
-                            Toast.makeText(SignupActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                            ImgBtn.setImageBitmap(bitmap);
+                if (data != null) {
+                    Uri contentURI = data.getData();//the content itself
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                        path = saveImage(bitmap);
+                        Toast.makeText(SignupActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                        ImgBtn.setImageBitmap(bitmap);
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(SignupActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(SignupActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                     }
-
                 }
 
             }
+
         }
+    }
 
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -262,15 +257,13 @@ public class SignupActivity extends AppCompatActivity {
         return "";
     }
 
-//    // CHECKING if the user exists in DB and registers users.
-//    private void userRegistration (){
-//
-//    }
-//
-//    private boolean isUsrExists(String user){
-//
-//
-//        return true;
-//    }
-//
+
+
+    private boolean isEmailValid(String email) {
+        return email.contains("@") && email.contains(".");
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password.length() > 5;
+    }
 }

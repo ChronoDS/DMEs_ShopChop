@@ -38,6 +38,7 @@
     <string name="etCountry">Country</string>
     <string name="etZip_code">Zip Code</string>
     <string name="etSign_up">Sign Up</string>
+    <string name="etPhone">Phone number</string>
     <!-- Example Album for App -->
     <string name="album_name">DMESSalbum</string>
 

@@ -382,7 +382,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    protected void notImplementedYet(View view){
+    public void notImplementedYet(View view){
         Toast.makeText(getApplicationContext(),"Not Implemented Yet!",Toast.LENGTH_SHORT).show();
     }
 
@@ -463,7 +463,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         return valid;
     }
-
 
 
 }
