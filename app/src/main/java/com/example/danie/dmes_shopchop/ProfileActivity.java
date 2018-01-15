@@ -13,9 +13,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.StorageReference;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -23,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.concurrent.Executor;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -32,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri mImageCaptureUri;
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
+    protected EditText userNameTextView;
     //
 
     /// ImageAccess Instance:
@@ -79,6 +88,19 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
         //**
+        FirebaseAuth aaa = FirebaseAuth.getInstance();
+        StorageReference storageRef = FirebaseAccess.getStorageReference();
+        aaa.signInWithEmailAndPassword("ep@devtest.com", "123456");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userNameTextView = (EditText) findViewById(R.id.userNameEditTextProfilePage);
+        String userName = "bla";
+        if(user != null){
+            userName = user.getDisplayName();
+        }
+
+        userNameTextView.setText(userName);
+
+
     }
 
     private void dispatchTakePictureIntent() {

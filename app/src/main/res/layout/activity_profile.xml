@@ -33,13 +33,15 @@ android:paddingBottom="@dimen/activity_vertical_margin"
             app:sriv_border_width="2dp"
             app:sriv_oval="true" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:layout_marginTop="100dp"
             android:textAlignment="center"
-            android:hint="Israel Israeli"/>
+            android:hint="Israel Israeli"
+            android:background="@android:color/transparent"
+            android:id="@+id/userNameEditTextProfilePage"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

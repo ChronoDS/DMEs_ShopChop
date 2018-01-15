@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "182768551434",
+    "firebase_url": "https://dmesshopchop.firebaseio.com",
+    "project_id": "dmesshopchop",
+    "storage_bucket": "dmesshopchop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182768551434:android:55fb3868b0fdfe16",
+        "android_client_info": {
+          "package_name": "com.example.danie.dmes_shopchop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182768551434-361odduk4mvrcf5um0rbv5jdaaqm53fs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.danie.dmes_shopchop",
+            "certificate_hash": "ac42659632fc83ef1f5511dbc53c2ad68ab2eab1"
+          }
+        },
+        {
+          "client_id": "182768551434-35b9kcv45kc1hi8ghpuidq3dbv2usvo8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.danie.dmes_shopchop",
+            "certificate_hash": "74ada3a6ec938e3a5d987e68bad5f5ac533d1d1a"
+          }
+        },
+        {
+          "client_id": "182768551434-k400epni1aaui3s8885gi2ojb52kfsal.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.danie.dmes_shopchop",
+            "certificate_hash": "2959b6ca2e51c12a852e81000f5c69bda516821c"
+          }
+        },
+        {
+          "client_id": "182768551434-8ksto6f0jvsc4chvltlgi723753b7au3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChRAJ0d7d6Rw04nNFA66yk6pHdvmyhtZg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182768551434-8ksto6f0jvsc4chvltlgi723753b7au3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
