@@ -143,34 +143,9 @@ public class SignupActivity extends AppCompatActivity {
                                  FirebaseAccess.getAuthInstance().signInWithEmailAndPassword(email, password);
                                  User user = new User(name,  phone,  email);
                                  FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).setValue(user);
-//                                 FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).getRef()
-//                                         .addValueEventListener(new ValueEventListener() {
-//                                     @Override
-//                                     public void onDataChange(DataSnapshot dataSnapshot) {
-//                                         HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
-//                                         for (String key: hashMap.keySet()) {
-//                                             switch(key){
-//                                                 case "name":
-//                                                     dataSnapshot.child(key).getRef().setValue(name);
-//                                                     break;
-//                                                 case "phone":
-//                                                     dataSnapshot.child(key).getRef().setValue(phone);
-//                                                     break;
-//                                                 case "isAdmin":
-//                                                     dataSnapshot.child(key).getRef().setValue(false);
-//                                                     break;
-//                                                 case "email":
-//                                                     dataSnapshot.child(key).getRef().setValue(email);
-//                                                     break;
-//                                                 default:
-//                                                     break;
-//                                             }
-//                                         }
-//                                     }
-//
-//                                     @Override
-//                                     public void onCancelled(DatabaseError databaseError) {}
-//                                 });
+
+                                 gotoCategories();
+
                              }
                          }
                      });
@@ -184,6 +159,12 @@ public class SignupActivity extends AppCompatActivity {
         }else{          // if name not valid
             etName.setError("Name is not valid!");
         }
+    }
+
+    private void gotoCategories(){
+        Intent intent = new Intent(this,CategoriesActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void dispatchTakePictureIntent() {

@@ -332,9 +332,9 @@ public class ProfileActivity extends AppCompatActivity {
     public void onTouch(View view) {
         Toast.makeText(getApplicationContext(), "not implemented yet", Toast.LENGTH_SHORT).show();
     }
-
+    ///////////////UPLOADING IMAGE TO FIREBASE STORAGE/////////////////////
     protected void uploadImageToStorage(Uri contentURI){
-        ///////////////UPLOADING IMAGE TO FIREBASE STORAGE/////////////////////
+
         StorageReference filePath = mStorageRef.child("profileImage").child(userId+"_Profile_"+contentURI.getLastPathSegment());
         filePath.putFile(contentURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -355,7 +355,6 @@ public class ProfileActivity extends AppCompatActivity {
                 t.show();
             }
         });
-        ///////////////////////////////////////////////////////////////////////
     }
 
 
