@@ -42,7 +42,6 @@
             app:srcCompat="@mipmap/ic_launcher_round" />
 
 
-
         <EditText
             android:id="@+id/etxt_FullName"
             android:layout_width="match_parent"
