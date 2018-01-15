@@ -33,7 +33,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -41,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.graphics.Color.GREEN;
 
 /**
  * A login screen that offers login via email/password.
@@ -55,7 +59,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Firebase Authentication Instance.
      */
     private FirebaseAuth mAuth;
+//    private FirebaseAnalytics mFirebaseAnalytics;
 
+    final static String TAG = "Auth EmailPass";
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -80,18 +86,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private TextView LoginStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /**
-         * initialize Firebase Authentication Instance.
-         */
+
+        LoginStatus = (TextView)findViewById(R.id.login_status);
+
+        // initialize Firebase Authentication Instance.
         mAuth = FirebaseAccess.getAuthInstance();
-
-
+//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -112,42 +119,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+//                attemptLogin();
+                // MY LOGIN TRY
+                signIn(mEmailView.getText().toString(),mPasswordView.getText().toString());
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-
-        /**
-         * Registers a User By Email and Password.
-         *
-         */
-
-
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "createUserWithEmail:success");
-//                            Toast.makeText(LoginActivity.this, "Authentication Succeed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
 
     }
 
@@ -254,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 5;
     }
 
     /**
@@ -404,7 +384,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    protected void notImplementedYet(View view){
+    public void notImplementedYet(View view){
         Toast.makeText(getApplicationContext(),"Not Implemented Yet!",Toast.LENGTH_SHORT).show();
     }
 
@@ -421,6 +401,67 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //        updateUI(currentUser);
 //    }
 
+// SIGNIN TO YOUR EXISTING ACCOUNT.
+    private void signIn(String email, String password) {
+        Log.d(TAG, "signIn:" + email);
+
+        if (!validateForm()) {
+            return;
+        }
+
+        // [START sign_in_with_email]
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            LoginStatus.setText("LOGIN SUCCESSFUL!!!");
+                            LoginStatus.setTextColor(GREEN);
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
+                            Toast.makeText(getApplicationContext(),"Login Successful!",Toast.LENGTH_SHORT).show();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+                        }
+
+                        // [START_EXCLUDE]
+                        if (!task.isSuccessful()) {
+                            LoginStatus.setText("LOGIN FAILED!");
+                        }
+//                        hideProgressDialog();
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END sign_in_with_email]
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String email = mEmailView.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError("Required.");
+            valid = false;
+        } else {
+            mEmailView.setError(null);
+        }
+
+        String password = mPasswordView.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError("Required.");
+            valid = false;
+        } else {
+            mPasswordView.setError(null);
+        }
+
+        return valid;
+    }
 
 
 }

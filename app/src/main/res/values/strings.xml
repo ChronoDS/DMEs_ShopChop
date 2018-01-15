@@ -38,6 +38,7 @@
     <string name="etCountry">Country</string>
     <string name="etZip_code">Zip Code</string>
     <string name="etSign_up">Sign Up</string>
+    <string name="etPhone">Phone number</string>
     <!-- Example Album for App -->
     <string name="album_name">DMESSalbum</string>
 
@@ -107,6 +108,7 @@
 You can add to cart any item by scanning its barcode, or by its name.\n
 Once it was added you can purchase it by creditcard / PayPal.\n
 You can choose that the product will reach your home by many types of delivery options, or you can just pickup the item from our store.</string>
+
 
 
 </resources>

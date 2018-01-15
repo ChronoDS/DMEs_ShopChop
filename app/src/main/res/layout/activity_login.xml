@@ -83,6 +83,13 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/login_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:text="NOT LOGGED IN"
+                android:textColor="#FF2345" />
             <ImageButton
                 android:id="@+id/imgFBnGGLlogin"
                 android:layout_width="wrap_content"
