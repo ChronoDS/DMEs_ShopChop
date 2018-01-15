@@ -4,6 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.danie.dmes_shopchop"
+        multiDexEnabled true
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -33,7 +34,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     compile 'com.joooonho:selectableroundedimageview:1.0.1'
 }
 apply plugin: 'com.google.gms.google-services'
