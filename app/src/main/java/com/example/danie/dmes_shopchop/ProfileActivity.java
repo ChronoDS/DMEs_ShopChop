@@ -24,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +43,7 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.joooonho.SelectableRoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,6 +83,8 @@ public class ProfileActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     UploadTask uploadTask;
     StorageMetadata metadata;
+    Uri uploadDownloadUri;
+    StorageReference filePath;
     //
 
     // full image capture
@@ -92,18 +97,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-
-
         // Create a storage reference from our app
         mStorageRef = FirebaseStorage.getInstance().getReference();
 //        downloadImageFromStorage();
-
-        // Create a reference
-        StorageReference mProfileRef = mStorageRef.child("profile_"+userId+".jpg");
-
-        // Create a reference to 'jpg'
-        StorageReference mProfileImagesRef = mStorageRef.child("profileImages/profile_"+userId+".jpg");
-
 
         fullname = (TextView) findViewById(R.id.pName);
         phonenum = (TextView)findViewById(R.id.pPhone);
@@ -111,6 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
         dbRef = FirebaseAccess.getDatabaseReference();
         userId = dbRef.push().getKey();
         GetUserData();
+
 
 
 
@@ -146,30 +143,6 @@ public class ProfileActivity extends AppCompatActivity {
         //**
     }
 
-    // TODO NEED A WORKING PHOTO MAKING METHOD.
-
-//    private void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        // Ensure that there's a camera activity to handle the intent
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            // Create the File where the photo should go
-//            File photoFile = null;
-//            try {
-//                photoFile = createImageFile();
-//            } catch (IOException ex) {
-//                // Error occurred while creating the File
-//
-//            }
-//            // Continue only if the File was successfully created
-//            if (photoFile != null) {
-//                Uri photoURI = FileProvider.getUriForFile(this,
-//                        "com.example.android.fileprovider",
-//                        photoFile);
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//            }
-//        }
-//    }
     //******************* IMAGE MANAGEMENT **********************//
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -191,10 +164,6 @@ public class ProfileActivity extends AppCompatActivity {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 RndImg.setImageBitmap(imageBitmap);
-
-                ///////////////UPLOADING IMAGE TO FIREBASE STORAGE/////////////////////
-//                Uri contentURI = data.getData();
-//                uploadImageToStorage(contentURI);
 
             } else if (requestCode == PICK_FROM_FILE){//choice was made for pick from file.
                 if (data != null) {
@@ -260,6 +229,7 @@ public class ProfileActivity extends AppCompatActivity {
             dbRef.child("users").child(user.getUid()).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    downloadProfileImageFromDB();
                     Map<String, Object> hashMap = (Map<String, Object>) dataSnapshot.getValue();
                     Set<String> keys = hashMap.keySet();
                     for(String key : keys){
@@ -276,48 +246,15 @@ public class ProfileActivity extends AppCompatActivity {
                             default:
                                 break;
                         }
-
                     }
-
-//                    fullname.setText(dataSnapshot.child("name").getRef().);
-//                    try {
-////                        if (dataSnapshot.getValue() != null) {
-//                            fullname.setText("aftergetValuecheck");
-//                            try {
-//                                fullname.setText(dataSnapshot.child("name").getRef().getValue().toString());
-//                                phonenum.setText(dataSnapshot.child("phone").getValue().toString());
-//                                emailadd.setText(dataSnapshot.child("email").getValue().toString());
-//                                Log.e("TAG", "" + dataSnapshot.getValue()); // your name values you will get here
-//                            }
-//                            catch (Exception e){
-//                                e.printStackTrace();
-//                            }
-////                        }
-////                        else{
-////                            Log.e("TAG", " it's null.");
-////                        }
-//                    }
-//                    catch (Exception e){
-//                        e.printStackTrace();
-//                    }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    // ...
+                    Toast.makeText(getApplicationContext(), "failed to get user data", Toast.LENGTH_SHORT).show();
                 }
             });
             ////////////////////////////////////
-
-//            fullname.setText(name);
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            String uid = user.getUid();
         }
         else{
             Intent intent = new Intent(this, LoginActivity.class);
@@ -334,12 +271,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
     ///////////////UPLOADING IMAGE TO FIREBASE STORAGE/////////////////////
     protected void uploadImageToStorage(Uri contentURI){
-
-        StorageReference filePath = mStorageRef.child("profileImage").child(userId+"_Profile_"+contentURI.getLastPathSegment());
+        filePath = mStorageRef.child("profileImage").child(user.getUid() + "_Profile_");
         filePath.putFile(contentURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(getApplicationContext(), "UPLOAD - Success In Uploading Gallery Photo",Toast.LENGTH_LONG).show();
+                uploadDownloadUri = taskSnapshot.getDownloadUrl();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -358,10 +295,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    //////////////// TODO TRY FOR FULL IMAGE CAPTURE.
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -379,41 +312,24 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    ///////////////DOWNLOADING IMAGE FROM FIREBASE STORAGE/////////////////////
+    protected boolean downloadProfileImageFromDB(){
+        RndImg = (SelectableRoundedImageView) findViewById(R.id.btnProfilePic);
+        if(user!=null) {
+            filePath = mStorageRef.child("profileImage").child(user.getUid()+"_Profile_");
+            if (filePath != null) {
+                Toast.makeText(getApplicationContext(), "Loading Profile Image", Toast.LENGTH_SHORT).show();
+                Glide.with(this).using(new FirebaseImageLoader()).load(filePath).into(RndImg);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                return true;
+            } else {
+                Toast.makeText(getApplicationContext(), "filePath is null", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        else{
+                Toast.makeText(getApplicationContext(), "filePath is null", Toast.LENGTH_LONG).show();
+                return false;
+        }
+    }
 }

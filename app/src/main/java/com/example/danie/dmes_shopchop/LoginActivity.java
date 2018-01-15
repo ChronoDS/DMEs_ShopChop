@@ -408,8 +408,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!validateForm()) {
             return;
         }
-        // TODO CRNS understand how to implement progress dialog properly.
-//        showProgressDialog();
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
@@ -427,10 +425,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 //                            updateUI(null);
-                            Toast.makeText(getApplicationContext(),"Login Failed!",Toast.LENGTH_SHORT).show();
                         }
 
                         // [START_EXCLUDE]
