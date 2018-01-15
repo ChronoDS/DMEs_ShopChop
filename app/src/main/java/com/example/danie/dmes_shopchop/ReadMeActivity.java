@@ -12,10 +12,4 @@ public class ReadMeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_me);
     }
-
-    protected void btn_Start(View view){
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
 }

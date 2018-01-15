@@ -23,14 +23,16 @@ public class CategoriesActivity extends AppCompatActivity {
         final TextView textView = findViewById(R.id.categoriesTextView);
         textView.setText("");
         DatabaseReference databaseRef = FirebaseAccess.getDatabaseReference();
-        databaseRef.child("sweats").getRef().addListenerForSingleValueEvent(new ValueEventListener(){
+        databaseRef.child("categories").getRef().addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Map<String, Object> hashMap = (HashMap<String,Object>) dataSnapshot.getValue();
-                Set<String> keys = hashMap.keySet();
-                for (String key: keys) {
-                    textView.append(key + ": "+ hashMap.get(key) + "\n");
+                if(hashMap!=null) {
+                    Set<String> keys = hashMap.keySet();
+                    for (String key : keys) {
+                        textView.append(key + ": " + hashMap.get(key) + "\n");
+                    }
                 }
             }
 

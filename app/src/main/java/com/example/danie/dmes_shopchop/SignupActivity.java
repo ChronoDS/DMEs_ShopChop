@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -32,8 +33,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,10 +67,31 @@ public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPasswrodAuth";
 
+    // User Profile Details:
+    private FirebaseUser user;
+    DatabaseReference dbRef;
+    private String userId;
+    //
+
+    // Image Upload variables
+    private StorageReference mStorageRef;
+    UploadTask uploadTask;
+    StorageMetadata metadata;
+    Uri uploadDownloadUri;
+    StorageReference filePath;
+    //
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+
+        // Create a storage reference from our app
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        dbRef = FirebaseAccess.getDatabaseReference();
+        userId = dbRef.push().getKey();
 
         /** initializing */
         etName = findViewById(R.id.etxt_FullName);
@@ -143,34 +169,9 @@ public class SignupActivity extends AppCompatActivity {
                                  FirebaseAccess.getAuthInstance().signInWithEmailAndPassword(email, password);
                                  User user = new User(name,  phone,  email);
                                  FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).setValue(user);
-//                                 FirebaseAccess.getDatabaseReference().child("users").child(FirebaseAccess.getUserInstance().getUid()).getRef()
-//                                         .addValueEventListener(new ValueEventListener() {
-//                                     @Override
-//                                     public void onDataChange(DataSnapshot dataSnapshot) {
-//                                         HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
-//                                         for (String key: hashMap.keySet()) {
-//                                             switch(key){
-//                                                 case "name":
-//                                                     dataSnapshot.child(key).getRef().setValue(name);
-//                                                     break;
-//                                                 case "phone":
-//                                                     dataSnapshot.child(key).getRef().setValue(phone);
-//                                                     break;
-//                                                 case "isAdmin":
-//                                                     dataSnapshot.child(key).getRef().setValue(false);
-//                                                     break;
-//                                                 case "email":
-//                                                     dataSnapshot.child(key).getRef().setValue(email);
-//                                                     break;
-//                                                 default:
-//                                                     break;
-//                                             }
-//                                         }
-//                                     }
-//
-//                                     @Override
-//                                     public void onCancelled(DatabaseError databaseError) {}
-//                                 });
+
+                                 gotoCategories();
+
                              }
                          }
                      });
@@ -184,6 +185,12 @@ public class SignupActivity extends AppCompatActivity {
         }else{          // if name not valid
             etName.setError("Name is not valid!");
         }
+    }
+
+    private void gotoCategories(){
+        Intent intent = new Intent(this,CategoriesActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void dispatchTakePictureIntent() {
@@ -211,6 +218,7 @@ public class SignupActivity extends AppCompatActivity {
             } else if (requestCode == PICK_FROM_FILE){//choice was made for pick from file.
                 if (data != null) {
                     Uri contentURI = data.getData();//the content itself
+                    uploadImageToStorage(contentURI);//Uploading Image from Gallery to FIREBASE.
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                         path = saveImage(bitmap);
@@ -265,5 +273,32 @@ public class SignupActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         return password.length() > 5;
+    }
+
+
+    ///////////////UPLOADING IMAGE TO FIREBASE STORAGE/////////////////////
+    protected void uploadImageToStorage(Uri contentURI){
+        user = FirebaseAccess.getUserInstance();
+        filePath = mStorageRef.child("profileImage").child(user.getUid()+"_Profile_");
+        filePath.putFile(contentURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplicationContext(), "UPLOAD - Success In Uploading Gallery Photo",Toast.LENGTH_LONG).show();
+                uploadDownloadUri = taskSnapshot.getDownloadUrl();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"UPLOAD - Failed To Upload Gallery Photo",Toast.LENGTH_LONG).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
+                Toast t = Toast.makeText(getApplicationContext(),"Upload is at: "+progress+"%",Toast.LENGTH_SHORT);
+                t.setGravity(Gravity.CENTER_HORIZONTAL,0,0);
+                t.show();
+            }
+        });
     }
 }
